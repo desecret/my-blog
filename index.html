@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的博客 | xiaohongshu1.us.ci</title>
+  <meta name="description" content="记录生活、分享思考、探索世界" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- 顶部导航 -->
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">✦ 我的博客</a>
+      <nav class="nav">
+        <a href="#posts">文章</a>
+        <a href="#about">关于</a>
+        <a href="#contact">联系</a>
+      </nav>
+      <button class="menu-toggle" aria-label="菜单" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <!-- 移动端菜单 -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#posts" onclick="toggleMenu()">文章</a>
+      <a href="#about" onclick="toggleMenu()">关于</a>
+      <a href="#contact" onclick="toggleMenu()">联系</a>
+    </div>
+  </header>
+
+  <!-- Hero 区域 -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <p class="hero-tag">Hello, 欢迎来到我的小角落 👋</p>
+        <h1 class="hero-title">用文字<br />记录生活</h1>
+        <p class="hero-desc">这里有我对生活的观察、技术的思考，以及那些值得被记录的瞬间。</p>
+        <a href="#posts" class="btn-primary">浏览文章 →</a>
+      </div>
+      <div class="hero-decoration">
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+        <div class="circle c3"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 文章列表 -->
+  <section class="posts-section" id="posts">
+    <div class="container">
+      <h2 class="section-title">近期文章</h2>
+
+      <div class="posts-grid">
+
+        <article class="post-card featured">
+          <div class="post-meta">
+            <span class="post-category">生活</span>
+            <span class="post-date">2026 · 03 · 05</span>
+          </div>
+          <h3 class="post-title">新的开始：搭建属于自己的博客</h3>
+          <p class="post-excerpt">拥有一个属于自己的域名和博客，是一件很有意义的事情。从今天起，用文字记录下每一个值得纪念的时刻……</p>
+          <a href="#" class="post-link">阅读全文 →</a>
+        </article>
+
+        <article class="post-card">
+          <div class="post-meta">
+            <span class="post-category">思考</span>
+            <span class="post-date">2026 · 03 · 01</span>
+          </div>
+          <h3 class="post-title">2026 年的一些想法</h3>
+          <p class="post-excerpt">新的一年，新的目标。整理了一下今年想做的事情和想去的地方……</p>
+          <a href="#" class="post-link">阅读全文 →</a>
+        </article>
+
+        <article class="post-card">
+          <div class="post-meta">
+            <span class="post-category">技术</span>
+            <span class="post-date">2026 · 02 · 20</span>
+          </div>
+          <h3 class="post-title">如何用纯 HTML/CSS 做一个好看的网页</h3>
+          <p class="post-excerpt">不依赖任何框架，只用最基础的 HTML 和 CSS，一样可以做出令人满意的页面效果……</p>
+          <a href="#" class="post-link">阅读全文 →</a>
+        </article>
+
+        <article class="post-card">
+          <div class="post-meta">
+            <span class="post-category">生活</span>
+            <span class="post-date">2026 · 02 · 10</span>
+          </div>
+          <h3 class="post-title">春天的第一杯咖啡</h3>
+          <p class="post-excerpt">今天天气很好，阳光透过窗帘照进来，泡了一杯手冲，坐在窗边发了一个小时的呆……</p>
+          <a href="#" class="post-link">阅读全文 →</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 关于我 -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="about-avatar">
+          <div class="avatar-placeholder">
+            <span>我</span>
+          </div>
+        </div>
+        <div class="about-text">
+          <h2>关于我</h2>
+          <p>嗨，我是这个博客的作者。喜欢记录生活、折腾代码、偶尔拍照。</p>
+          <p>这个博客是我存放想法的地方，没有特别的主题，只是随心所写。</p>
+          <div class="tags">
+            <span class="tag">📷 摄影</span>
+            <span class="tag">💻 技术</span>
+            <span class="tag">☕ 咖啡</span>
+            <span class="tag">📚 阅读</span>
+            <span class="tag">🌏 旅行</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <h2 class="section-title">联系我</h2>
+      <p class="contact-desc">有什么想说的，欢迎发邮件或通过以下方式找到我。</p>
+      <div class="contact-links">
+        <a href="mailto:hello@xiaohongshu1.us.ci" class="contact-item">
+          <span class="contact-icon">✉</span>
+          <span>hello@xiaohongshu1.us.ci</span>
+        </a>
+        <a href="https://github.com/" target="_blank" class="contact-item">
+          <span class="contact-icon">⌥</span>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>© 2026 xiaohongshu1.us.ci &nbsp;·&nbsp; Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('open');
+    }
+    // 点击外部关闭菜单
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobileMenu');
+      const toggle = document.querySelector('.menu-toggle');
+      if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>
