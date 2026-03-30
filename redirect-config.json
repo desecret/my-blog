@@ -1,0 +1,10 @@
+{
+  "delaySeconds": 1,
+  "defaultTarget": "https://wx.cdgoufang.com/v/f/oO3LcT7R",
+  "targetPool": [
+    "https://wx.cdgoufang.com/v/f/oO3LcT7R"
+  ],
+  "keyMap": {
+    "a": "https://wx.cdgoufang.com/v/f/oO3LcT7R"
+  }
+}
