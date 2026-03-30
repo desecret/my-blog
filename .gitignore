@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# Playwright runtime data
+scripts/.pw-user-data/
+
+# Local secrets / request captures
+xhslink/input/cookie.txt
+xhslink/input/curl.txt
+
+# Generated outputs
+xhslink/output/
+
+# Logs
+*.log

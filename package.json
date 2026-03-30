@@ -1,0 +1,24 @@
+{
+  "name": "xhslinkcreator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/desecret/my-blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/desecret/my-blog/issues"
+  },
+  "homepage": "https://github.com/desecret/my-blog#readme",
+  "description": "",
+  "dependencies": {
+    "crypto-js": "^4.2.0",
+    "playwright": "^1.58.2"
+  }
+}

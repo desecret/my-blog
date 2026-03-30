@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>跳转中...</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --panel: #ffffff;
+      --ink: #1f1a14;
+      --muted: #736a5e;
+      --brand: #2d8f73;
+      --line: #e7dfd1;
+      --err: #b9412f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 18%, #dff3ea 0, transparent 26%),
+        radial-gradient(circle at 82% 76%, #fee9dc 0, transparent 22%),
+        var(--bg);
+      padding: 20px;
+    }
+
+    .card {
+      width: min(720px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 16px 34px rgba(30, 23, 17, 0.08);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .target {
+      margin-top: 14px;
+      font-size: 13px;
+      background: #f8fbfa;
+      border: 1px dashed #cde2d9;
+      border-radius: 10px;
+      padding: 10px;
+      word-break: break-all;
+    }
+
+    .err {
+      margin-top: 14px;
+      color: var(--err);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .btn {
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 18px;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    {% if error %}
+      <h1>无法跳转</h1>
+      <div class="err">{{ error }}</div>
+      <p>请检查参数后重试。</p>
+    {% else %}
+      <h1>正在为你跳转</h1>
+      <p><span id="countdown">{{ delay }}</span> 秒后自动前往目标链接。</p>
+      <div class="target">{{ target }}</div>
+      <a class="btn" href="{{ target }}" rel="nofollow noopener">立即跳转</a>
+      <div class="hint">如果没有自动跳转，请点击上方按钮。</div>
+    {% endif %}
+  </main>
+
+  {% if not error %}
+  <script>
+    (function () {
+      var target = {{ target|tojson }};
+      var delay = {{ delay|int }};
+      var el = document.getElementById('countdown');
+      var left = delay;
+
+      function tick() {
+        if (el) el.textContent = String(left);
+        if (left <= 0) {
+          window.location.href = target;
+          return;
+        }
+        left -= 1;
+        setTimeout(tick, 1000);
+      }
+
+      tick();
+    })();
+  </script>
+  {% endif %}
+</body>
+</html>
