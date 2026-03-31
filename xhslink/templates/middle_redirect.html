@@ -32,7 +32,7 @@
     }
 
     .card {
-      width: min(720px, 100%);
+      width: min(560px, 100%);
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -51,16 +51,6 @@
       line-height: 1.7;
     }
 
-    .target {
-      margin-top: 14px;
-      font-size: 13px;
-      background: #f8fbfa;
-      border: 1px dashed #cde2d9;
-      border-radius: 10px;
-      padding: 10px;
-      word-break: break-all;
-    }
-
     .err {
       margin-top: 14px;
       color: var(--err);
@@ -68,23 +58,28 @@
       font-weight: 600;
     }
 
-    .btn {
-      margin-top: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: var(--brand);
-      color: #fff;
-      text-decoration: none;
-      font-weight: 700;
-      padding: 10px 18px;
-    }
-
     .hint {
-      margin-top: 10px;
+      margin-top: 14px;
       font-size: 12px;
       color: var(--muted);
+    }
+
+    .loading-dot::after {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-left: 8px;
+      border-radius: 50%;
+      background: var(--brand);
+      animation: pulse 1s ease-in-out infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.7); opacity: 0.35; }
+      50% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.7); opacity: 0.35; }
     }
   </style>
 </head>
@@ -95,11 +90,9 @@
       <div class="err">{{ error }}</div>
       <p>请检查参数后重试。</p>
     {% else %}
-      <h1>正在为你跳转</h1>
-      <p><span id="countdown">{{ delay }}</span> 秒后自动前往目标链接。</p>
-      <div class="target">{{ target }}</div>
-      <a class="btn" href="{{ target }}" rel="nofollow noopener">立即跳转</a>
-      <div class="hint">如果没有自动跳转，请点击上方按钮。</div>
+      <h1 class="loading-dot">页面跳转中</h1>
+      <p>请稍候，系统正在为你打开页面。</p>
+      <div class="hint"><span id="countdown">{{ delay }}</span> 秒后自动跳转。</div>
     {% endif %}
   </main>
 

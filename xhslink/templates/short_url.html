@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Short URL 生成器</title>
+  <title>短链运营台</title>
   <style>
     :root {
-      --bg: #f4efe7;
+      --bg: #f4f1ea;
       --panel: #fffdfa;
-      --ink: #1d1a17;
-      --muted: #6f6558;
-      --line: #e8dfd2;
-      --brand: #1f8f6a;
-      --brand-weak: #e8f6ef;
-      --danger: #bc3e32;
+      --ink: #1f1c18;
+      --muted: #72685d;
+      --line: #e8dfd3;
+      --brand: #c56a1f;
+      --brand-weak: #fff3e8;
+      --danger: #bb3f32;
+      --ok: #1f7c54;
+      --dark: #2a241e;
     }
 
     * { box-sizing: border-box; }
@@ -23,40 +25,45 @@
       font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
       color: var(--ink);
       background:
-        radial-gradient(circle at 8% 12%, #d9f4e5 0, transparent 28%),
-        radial-gradient(circle at 88% 84%, #fde6d8 0, transparent 22%),
-        linear-gradient(180deg, #f7f1e9 0%, #f2ede6 100%);
+        radial-gradient(circle at 12% 15%, #ffe7cf 0, transparent 30%),
+        radial-gradient(circle at 84% 80%, #e2f1ff 0, transparent 25%),
+        linear-gradient(180deg, #f7f3ed 0%, #f2ede6 100%);
       min-height: 100vh;
+      padding: 24px;
+    }
+
+    .layout {
+      width: min(1180px, 100%);
+      margin: 0 auto;
       display: grid;
-      place-items: center;
-      padding: 20px;
+      gap: 18px;
+      grid-template-columns: 1.1fr 0.9fr;
     }
 
     .panel {
-      width: min(880px, 100%);
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 20px;
-      box-shadow: 0 24px 40px rgba(36, 29, 22, 0.08);
+      box-shadow: 0 18px 36px rgba(47, 36, 24, 0.08);
       overflow: hidden;
     }
 
     .head {
       padding: 26px 28px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(95deg, #fdf7f0 0%, #f5fbf7 100%);
+      background: linear-gradient(95deg, #fff7ef 0%, #fffdf9 100%);
     }
 
     .head h1 {
       margin: 0;
-      font-size: 28px;
+      font-size: 34px;
       letter-spacing: 0.01em;
     }
 
     .head p {
       margin: 8px 0 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .body {
@@ -70,23 +77,20 @@
       font-weight: 600;
     }
 
-    textarea {
+    input {
       width: 100%;
-      min-height: 120px;
-      resize: vertical;
       border: 1px solid var(--line);
       border-radius: 12px;
-      padding: 14px;
-      font-size: 14px;
-      line-height: 1.6;
+      padding: 13px 14px;
+      font-size: 15px;
       color: var(--ink);
       background: #fff;
       outline: none;
     }
 
-    textarea:focus {
-      border-color: #8dcfb8;
-      box-shadow: 0 0 0 4px rgba(31, 143, 106, 0.12);
+    input:focus {
+      border-color: #e0a979;
+      box-shadow: 0 0 0 4px rgba(197, 106, 31, 0.14);
     }
 
     .row {
@@ -101,10 +105,15 @@
       border-radius: 999px;
       background: var(--brand);
       color: white;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
-      padding: 11px 18px;
+      padding: 12px 20px;
       cursor: pointer;
+    }
+
+    button.ghost {
+      background: #fff1e5;
+      color: #8b4d1b;
     }
 
     button[disabled] {
@@ -119,81 +128,347 @@
     }
 
     .status.err { color: var(--danger); }
-    .status.ok { color: var(--brand); }
+    .status.ok { color: var(--ok); }
 
     .out {
-      border: 1px dashed #b8d9ca;
+      border: 1px dashed #e2c1a3;
       background: var(--brand-weak);
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 14px;
+      padding: 14px;
       display: none;
-      gap: 6px;
+      gap: 10px;
     }
 
     .out.show { display: grid; }
 
-    .out .k {
+    .result-label {
       font-size: 12px;
       color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .out a {
-      color: #0f5d43;
+    .result-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
       font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .badge.new {
+      color: #8b4d1b;
+      background: #fff0df;
+      border-color: #edc9a6;
+    }
+
+    .badge.reused {
+      color: #17603f;
+      background: #eaf8f0;
+      border-color: #bfe5cf;
+    }
+
+    .short-block {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid #f0d6c0;
+    }
+
+    .short-block a {
+      color: #8b4d1b;
+      font-weight: 800;
+      font-size: 15px;
       word-break: break-all;
     }
 
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .helper {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
       line-height: 1.7;
+    }
+
+    .tip {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      min-width: 140px;
+    }
+
+    .stat .k {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .stat .v {
+      margin-top: 4px;
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .history {
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      max-height: calc(100vh - 88px);
+      overflow: auto;
+    }
+
+    .history h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .h-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .h-item .line {
+      font-size: 12px;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .target-line {
+      font-size: 12px;
+      color: var(--muted);
+      background: #faf4ed;
+      border: 1px solid #f0dfd0;
+      border-radius: 8px;
+      padding: 7px 9px;
+      word-break: break-all;
+    }
+
+    .history-short {
+      color: var(--dark);
+      font-weight: 700;
+      word-break: break-all;
+      font-size: 14px;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .h-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: 1px solid #ecd3bd;
+      background: #fff8f1;
+      color: #8b4d1b;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .h-item a {
+      color: #8b4d1b;
+      font-weight: 700;
+      word-break: break-all;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .history {
+        max-height: none;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="panel">
-    <section class="head">
-      <h1>Short URL 生成器</h1>
-      <p>输入你想跳转的链接，系统会为你生成可用的小红书短链。</p>
+  <main class="layout">
+    <section class="panel">
+      <section class="head">
+        <h1>短链运营台</h1>
+        <p>输入落地页 URL，一键生成可投放短链。页面仅展示短链结果，便于复制和分发。</p>
+      </section>
+      <section class="body">
+        <div class="stats">
+          <div class="stat">
+            <div class="k">累计生成短链</div>
+            <div id="totalGenerated" class="v">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">累计映射链接</div>
+            <div id="mappedCount" class="v">0</div>
+          </div>
+        </div>
+
+        <label for="targetInput">投放目标 URL</label>
+        <input id="targetInput" type="url" placeholder="https://example.com/landing-page" />
+
+        <div class="row">
+          <button id="generateBtn">生成投放短链</button>
+          <button id="copyBtn" class="ghost" disabled>复制短链</button>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <div id="output" class="out">
+          <div class="result-meta">
+            <div class="result-label">生成结果</div>
+            <span id="resultBadge" class="badge new">新生成</span>
+          </div>
+          <div class="short-block">
+            <a id="shortUrl" href="#" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+          <div id="resultTip" class="tip"></div>
+          <div class="actions">
+            <button id="openBtn" class="ghost" disabled>打开短链</button>
+          </div>
+        </div>
+
+        <div class="helper">
+          说明：支持连续生成，历史区保留最近记录，可快速复制。
+        </div>
+      </section>
     </section>
-    <section class="body">
-      <label for="applinkInput">applink value</label>
-      <textarea id="applinkInput" placeholder="https://wx.cdgoufang.com/v/f/oO3LcT7R"></textarea>
 
-      <div class="row">
-        <button id="generateBtn">生成 short_url</button>
-      </div>
-
-      <div id="status" class="status"></div>
-
-      <div id="output" class="out">
-        <div class="k">short_url</div>
-        <a id="shortUrl" href="#" target="_blank" rel="noopener noreferrer"></a>
-      </div>
-
-      <div class="helper">
-        说明：页面调用同服务下的 API <code>/api/short-url</code>，需要本地 cookie 文件可用。
-      </div>
-    </section>
+    <aside class="panel history">
+      <h2>最近生成</h2>
+      <div id="historyList" class="history-list"></div>
+    </aside>
   </main>
 
   <script>
-    const input = document.getElementById('applinkInput');
+    const input = document.getElementById('targetInput');
     const btn = document.getElementById('generateBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const openBtn = document.getElementById('openBtn');
     const status = document.getElementById('status');
     const output = document.getElementById('output');
     const shortUrl = document.getElementById('shortUrl');
+    const resultBadge = document.getElementById('resultBadge');
+    const resultTip = document.getElementById('resultTip');
+    const totalGenerated = document.getElementById('totalGenerated');
+    const mappedCount = document.getElementById('mappedCount');
+    const historyList = document.getElementById('historyList');
+
+    let latestShortUrl = '';
+
+    function formatDate(ts) {
+      if (!ts) return '-';
+      const d = new Date(ts);
+      return d.toLocaleString('zh-CN', { hour12: false });
+    }
+
+    async function copyText(value) {
+      if (!value) return;
+      await navigator.clipboard.writeText(value);
+    }
+
+    function renderHistory(history) {
+      if (!history || !history.length) {
+        historyList.innerHTML = '<div class="line">暂无历史记录</div>';
+        return;
+      }
+
+      historyList.innerHTML = history.map((item) => {
+        const short = item.short_url || '';
+        const target = item.target_url || '';
+        const created = formatDate(item.created_at_ms);
+        return `
+          <div class="h-item">
+            <div class="line">时间：${created}</div>
+            ${short ? `<a class="history-short" href="${short}" target="_blank" rel="noopener noreferrer">${short}</a>` : '<div class="line">短链不可用</div>'}
+            ${target ? `<div class="target-line">跳转目标：${target}</div>` : '<div class="target-line">跳转目标：-</div>'}
+            <div class="h-actions">
+              ${short ? `<button class="small-btn" data-copy="${short}">复制</button>` : ''}
+              ${short ? `<a class="small-btn" href="${short}" target="_blank" rel="noopener noreferrer">打开</a>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      historyList.querySelectorAll('[data-copy]').forEach((el) => {
+        el.addEventListener('click', async () => {
+          const text = el.getAttribute('data-copy') || '';
+          try {
+            await copyText(text);
+            status.className = 'status ok';
+            status.textContent = '历史短链已复制';
+          } catch (_) {
+            status.className = 'status err';
+            status.textContent = '复制失败，请手动复制';
+          }
+        });
+      });
+    }
+
+    async function loadDashboard() {
+      try {
+        const resp = await fetch('/api/short-url-dashboard');
+        const data = await resp.json();
+        if (!resp.ok || data.code !== 0) {
+          return;
+        }
+        totalGenerated.textContent = String(data.data.total_generated || 0);
+        mappedCount.textContent = String(data.data.mapped_url_count || 0);
+        renderHistory(data.data.history || []);
+      } catch (_) {
+      }
+    }
 
     async function generateShortUrl() {
-      const applink = input.value.trim();
-      if (!applink) {
+      const targetUrl = input.value.trim();
+      if (!targetUrl) {
         status.className = 'status err';
-        status.textContent = '请先输入 applink value';
+        status.textContent = '请先输入目标 URL';
         output.classList.remove('show');
         return;
       }
 
       btn.disabled = true;
+      copyBtn.disabled = true;
+      openBtn.disabled = true;
       status.className = 'status';
       status.textContent = '正在生成，请稍候...';
 
@@ -201,7 +476,7 @@
         const resp = await fetch('/api/short-url', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ applink })
+          body: JSON.stringify({ target_url: targetUrl })
         });
         const data = await resp.json();
 
@@ -210,12 +485,22 @@
         }
 
         const url = data.data.short_url;
+          const reused = Boolean(data.data.reused);
+        latestShortUrl = url;
         shortUrl.href = url;
         shortUrl.textContent = url;
+          resultBadge.className = `badge ${reused ? 'reused' : 'new'}`;
+          resultBadge.textContent = reused ? '复用短链' : '新生成';
+          resultTip.textContent = data.data.reuse_tip || '';
         output.classList.add('show');
+        copyBtn.disabled = false;
+          openBtn.disabled = false;
 
         status.className = 'status ok';
-        status.textContent = '生成成功';
+          status.textContent = reused ? '已复用已有短链' : '短链生成成功，可直接复制投放';
+
+        totalGenerated.textContent = String(data.data.total_generated || 0);
+        await loadDashboard();
       } catch (err) {
         status.className = 'status err';
         status.textContent = `失败：${err.message || err}`;
@@ -226,6 +511,24 @@
     }
 
     btn.addEventListener('click', generateShortUrl);
+    copyBtn.addEventListener('click', async () => {
+      if (!latestShortUrl) return;
+      try {
+        await copyText(latestShortUrl);
+        status.className = 'status ok';
+        status.textContent = '短链已复制到剪贴板';
+      } catch (_) {
+        status.className = 'status err';
+        status.textContent = '复制失败，请手动复制';
+      }
+    });
+
+    openBtn.addEventListener('click', () => {
+      if (!latestShortUrl) return;
+      window.open(latestShortUrl, '_blank', 'noopener,noreferrer');
+    });
+
+    loadDashboard();
   </script>
 </body>
 </html>

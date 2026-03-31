@@ -1,6 +1,7 @@
 import execjs
 import json
 import random
+import socket
 import time
 from pathlib import Path
 from urllib import request as urllib_request
@@ -15,8 +16,22 @@ OUTPUT_FILE = BASE_DIR / "output" / "short_url_result.json"
 API_PATH = "/api/sns/web/short_url"
 TARGET_URL = "https://edith.xiaohongshu.com/api/sns/web/short_url"
 
+
+def get_local_ip() -> str:
+    """Get the primary local IPv4 address used for outbound traffic."""
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # UDP connect does not send packets, it only resolves the local route.
+        sock.connect(("8.8.8.8", 80))
+        return sock.getsockname()[0]
+    except OSError:
+        return "127.0.0.1"
+    finally:
+        sock.close()
+
 # 中间页地址（页面内部自行决定跳转目标，不通过 URL 参数传递目标链接）
-MIDDLE_PAGE_URL = "http://xiaohongshu1.us.ci"
+MIDDLE_PAGE_URL = f"http://{get_local_ip()}:9999/middle"
+print(f"Middle page URL: {MIDDLE_PAGE_URL}")  # Debug log for middle page URL
 
 
 # xhs 协议中的 applink 使用“中间页链接”
@@ -239,18 +254,20 @@ def run_short_url_task(original_url: str) -> dict:
         },
         "timestamp_ms": int(time.time() * 1000),
     }
+
+    out_path = OUTPUT_FILE
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+
     return result
 
 
 def main():
     result = run_short_url_task(ORIGINAL_URL)
 
-    out_path = OUTPUT_FILE
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-
+    
     print(f"status_code={result['response']['status_code']}")
-    print(f"output={out_path}")
+    # print(f"output={out_path}")
     print(f"short_url={result['response']['data']}")
 
 
