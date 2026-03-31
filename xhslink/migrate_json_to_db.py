@@ -48,7 +48,6 @@ def import_app_config(conn: sqlite3.Connection, config: dict, now_ms: int) -> No
         "delaySeconds": to_int(config.get("delaySeconds"), 1),
         "defaultTarget": (config.get("defaultTarget") or "").strip(),
         "nextId": to_int(config.get("nextId"), 1),
-        "totalGenerated": to_int(config.get("totalGenerated"), 0),
         "targetPool": config.get("targetPool") if isinstance(config.get("targetPool"), list) else [],
     }
 

@@ -11,7 +11,6 @@ from db_store import (
     fetch_target_url_by_key,
     get_or_create_link_key,
     get_total_generated,
-    increment_total_generated,
     insert_generation_log,
     insert_middle_visit_event,
     touch_generation_log_for_reuse,
@@ -256,10 +255,6 @@ def create_short_url():
                 ),
                 'update_link_mapping_urls_after_short',
             )
-            if not reused:
-                total_generated = increment_total_generated(_db_path(config))
-            else:
-                total_generated = get_total_generated(_db_path(config))
             if reused:
                 _try_db_write(
                     config,
@@ -292,8 +287,7 @@ def create_short_url():
                     }, _db_path(config)),
                     'insert_generation_log',
                 )
-        else:
-            total_generated = get_total_generated(_db_path(config))
+        total_generated = get_total_generated(_db_path(config))
 
         return jsonify({
             "code": 0,

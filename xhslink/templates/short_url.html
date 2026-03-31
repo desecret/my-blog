@@ -336,10 +336,6 @@
             <div class="k">累计生成短链</div>
             <div id="totalGenerated" class="v">0</div>
           </div>
-          <div class="stat">
-            <div class="k">累计映射链接</div>
-            <div id="mappedCount" class="v">0</div>
-          </div>
         </div>
 
         <label for="targetInput">投放目标 URL</label>
@@ -389,7 +385,6 @@
     const resultBadge = document.getElementById('resultBadge');
     const resultTip = document.getElementById('resultTip');
     const totalGenerated = document.getElementById('totalGenerated');
-    const mappedCount = document.getElementById('mappedCount');
     const historyList = document.getElementById('historyList');
 
     let latestShortUrl = '';
@@ -451,7 +446,6 @@
           return;
         }
         totalGenerated.textContent = String(data.data.total_generated || 0);
-        mappedCount.textContent = String(data.data.mapped_url_count || 0);
         renderHistory(data.data.history || []);
       } catch (_) {
       }

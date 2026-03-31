@@ -95,7 +95,6 @@ def upsert_app_config(config: dict, db_path: str = "") -> None:
         "delaySeconds": int(config.get("delaySeconds") or 1),
         "defaultTarget": (config.get("defaultTarget") or "").strip(),
         "nextId": int(config.get("nextId") or 1),
-        "totalGenerated": int(config.get("totalGenerated") or 0),
         "targetPool": config.get("targetPool") if isinstance(config.get("targetPool"), list) else [],
     }
 
@@ -244,12 +243,11 @@ def fetch_dashboard_data(db_path: str = "", history_limit: int = 200, logs_limit
     with sqlite3.connect(path) as conn:
         conn.row_factory = sqlite3.Row
 
-        config_rows = conn.execute("SELECT config_key, config_value FROM app_config").fetchall()
-        config_map = {
-            row["config_key"]: _load_json_text(row["config_value"], None) for row in config_rows
-        }
-
-        total_generated = int(config_map.get("totalGenerated") or 0)
+        total_generated = int(
+            conn.execute(
+                "SELECT COUNT(1) FROM short_link_generation_log WHERE reused = 0"
+            ).fetchone()[0]
+        )
         mapped_url_count = int(
             conn.execute("SELECT COUNT(1) FROM link_mapping WHERE status='active'").fetchone()[0]
         )
@@ -494,22 +492,12 @@ def update_link_mapping_urls(
         conn.commit()
 
 
-def increment_total_generated(db_path: str = "") -> int:
-    path = _normalize_db_path(db_path)
-    _ensure_schema(path)
-
-    with sqlite3.connect(path) as conn:
-        conn.execute("BEGIN IMMEDIATE")
-        current = int(_get_app_config_value(conn, "totalGenerated", 0) or 0)
-        current += 1
-        _set_app_config_value(conn, "totalGenerated", current)
-        conn.commit()
-        return current
-
-
 def get_total_generated(db_path: str = "") -> int:
     path = _normalize_db_path(db_path)
     _ensure_schema(path)
 
     with sqlite3.connect(path) as conn:
-        return int(_get_app_config_value(conn, "totalGenerated", 0) or 0)
+        row = conn.execute(
+            "SELECT COUNT(1) FROM short_link_generation_log WHERE reused = 0"
+        ).fetchone()
+        return int((row or [0])[0] or 0)
